@@ -2,24 +2,20 @@ import { useState, useCallback, useRef } from 'react';
 import type { WordCard } from '../data/words';
 
 export interface SpeechSegment {
-  id: string;       // 唯一标识，用于高亮联动
-  text: string;     // 朗读文本
-  lang?: string;    // 语言，默认 en-US
-  rate?: number;    // 语速
+  id: string;
+  text: string;
+  lang?: string;
+  rate?: number;
 }
 
 export interface SpeechState {
   isPlaying: boolean;
   isPaused: boolean;
   currentSegmentId: string | null;
-  segmentIndex: number;   // 当前播放到第几段（0-based）
+  segmentIndex: number;
   totalSegments: number;
 }
 
-/**
- * 将一张单词卡所有信息拆成有序的分段队列
- * 英文文本用 en-US，中文翻译/解释用 zh-CN
- */
 export function buildStandardSegments(card: WordCard): SpeechSegment[] {
   const segs: SpeechSegment[] = [];
   segs.push({ id: 'word', text: `${card.word}.`, lang: 'en-US', rate: 0.75 });
@@ -63,8 +59,6 @@ export function buildTutorScript(card: WordCard): SpeechSegment[] {
   segs.push({ id: 'tutor-end', text: `这就是 ${card.word} 的完整讲解。希望能帮到你！`, lang: 'zh-CN', rate: 0.9 });
   return segs;
 }
-}
-}
 
 export function useSpeech() {
   const [state, setState] = useState<SpeechState>({
@@ -75,86 +69,51 @@ export function useSpeech() {
     totalSegments: 0,
   });
 
-  // Refs for mutable values that shouldn't trigger re-renders
   const queueRef = useRef<SpeechSegment[]>([]);
   const indexRef = useRef(0);
   const stoppedRef = useRef(false);
   const pausedRef = useRef(false);
   const onCardEndRef = useRef<(() => void) | null>(null);
 
-  /** Play a single utterance, call cb when done */
   const playOne = useCallback((seg: SpeechSegment, cb: () => void) => {
     const synth = window.speechSynthesis;
     if (!synth) { cb(); return; }
-
     const utt = new SpeechSynthesisUtterance(seg.text);
     utt.lang = seg.lang ?? 'en-US';
     utt.rate = seg.rate ?? 0.9;
     utt.pitch = 1;
     utt.volume = 1;
-
-    utt.onstart = () => {
-      setState(s => ({ ...s, currentSegmentId: seg.id }));
-    };
+    utt.onstart = () => setState(s => ({ ...s, currentSegmentId: seg.id }));
     utt.onend = () => { cb(); };
     utt.onerror = () => { cb(); };
-
     synth.speak(utt);
   }, []);
 
-  /** Advance through queue recursively */
   const advance = useCallback(() => {
-    if (stoppedRef.current) return;
-    if (pausedRef.current) return; // will be resumed later
-
+    if (stoppedRef.current || pausedRef.current) return;
     const queue = queueRef.current;
     const idx = indexRef.current;
-
     if (idx >= queue.length) {
-      // All segments done
-      setState({
-        isPlaying: false,
-        isPaused: false,
-        currentSegmentId: null,
-        segmentIndex: 0,
-        totalSegments: 0,
-      });
+      setState({ isPlaying: false, isPaused: false, currentSegmentId: null, segmentIndex: 0, totalSegments: 0 });
       onCardEndRef.current?.();
       return;
     }
-
     const seg = queue[idx];
     indexRef.current = idx + 1;
     setState(s => ({ ...s, segmentIndex: idx, currentSegmentId: seg.id }));
-
     playOne(seg, () => {
-      if (!stoppedRef.current && !pausedRef.current) {
-        advance();
-      }
+      if (!stoppedRef.current && !pausedRef.current) advance();
     });
   }, [playOne]);
 
-  /** Start playing a segment queue, call onEnd when everything finishes */
-  const startQueue = useCallback((
-    segments: SpeechSegment[],
-    onEnd?: () => void,
-  ) => {
+  const startQueue = useCallback((segments: SpeechSegment[], onEnd?: () => void) => {
     window.speechSynthesis?.cancel();
     stoppedRef.current = false;
     pausedRef.current = false;
     queueRef.current = segments;
     indexRef.current = 0;
     onCardEndRef.current = onEnd ?? null;
-
-    setState({
-      isPlaying: true,
-      isPaused: false,
-      currentSegmentId: null,
-      segmentIndex: 0,
-      totalSegments: segments.length,
-    });
-
-    // small delay so state update propagates before first utterance
+    setState({ isPlaying: true, isPaused: false, currentSegmentId: null, segmentIndex: 0, totalSegments: segments.length });
     setTimeout(() => advance(), 80);
   }, [advance]);
 
@@ -162,13 +121,7 @@ export function useSpeech() {
     stoppedRef.current = true;
     pausedRef.current = false;
     window.speechSynthesis?.cancel();
-    setState({
-      isPlaying: false,
-      isPaused: false,
-      currentSegmentId: null,
-      segmentIndex: 0,
-      totalSegments: 0,
-    });
+    setState({ isPlaying: false, isPaused: false, currentSegmentId: null, segmentIndex: 0, totalSegments: 0 });
     onCardEndRef.current = null;
   }, []);
 
@@ -182,36 +135,23 @@ export function useSpeech() {
   const resume = useCallback(() => {
     if (!state.isPaused) return;
     pausedRef.current = false;
-    // Some browsers support resume(), others need to re-queue
     const synth = window.speechSynthesis;
     if (synth?.paused) {
       synth.resume();
       setState(s => ({ ...s, isPaused: false }));
     } else {
-      // Fallback: re-start from current index
       setState(s => ({ ...s, isPaused: false, isPlaying: true }));
       setTimeout(() => advance(), 50);
     }
   }, [state.isPaused, advance]);
 
-  /** Convenience: speak a single word pronunciation */
   const speakWord = useCallback((word: string) => {
     startQueue([{ id: `word-${word}`, text: word, lang: 'en-US', rate: 0.75 }]);
   }, [startQueue]);
 
-  /** Convenience: speak a single sentence */
   const speakSentence = useCallback((sentence: string, id: string) => {
     startQueue([{ id, text: sentence, lang: 'en-US', rate: 0.85 }]);
   }, [startQueue]);
 
-  return {
-    state,
-    startQueue,
-    stop,
-    pause,
-    resume,
-    speakWord,
-    speakSentence,
-    buildCardSegments,
-  };
+  return { state, startQueue, stop, pause, resume, speakWord, speakSentence, buildStandardSegments, buildTutorScript };
 }

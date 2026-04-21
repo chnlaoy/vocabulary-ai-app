@@ -22,7 +22,10 @@ export default function App() {
   const [testResult, setTestResult] = useState<TestResult | null>(null);
   const [wordsToLearn, setWordsToLearn] = useState<typeof wordCards>([]);
 
-  const [mode, setMode] = useState<Mode>('text');\n  const [isTutorMode, setIsTutorMode] = useState(false);\n  const [autoPlay, setAutoPlay] = useState(false);\n  const [currentIndex, setCurrentIndex] = useState(0);
+  const [mode, setMode] = useState<Mode>('text');
+  const [isTutorMode, setIsTutorMode] = useState(false);
+  const [autoPlay, setAutoPlay] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [search, setSearch] = useState('');
   const [showSidebar, setShowSidebar] = useState(false);
   const [autoAdvance, setAutoAdvance] = useState(true);

@@ -2,7 +2,7 @@ export interface WordExample {
   sentence: string;
   translation: string;
   context: string;
-  category: 'daily' | 'media' | 'formal';
+  category?: 'daily' | 'media' | 'formal';
 }
 
 export interface RelatedWord {
