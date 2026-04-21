@@ -124,6 +124,33 @@ export function QuizScreen({
               </button>
             );
           })}
+
+          {/* Uncertain Option */}
+          <button
+            onClick={() => handleSelectOption(-1)}
+            className={`w-full text-left p-4 rounded-xl border-2 transition-all duration-200 ${
+              selectedOption === -1
+                ? 'border-amber-500 bg-amber-50'
+                : 'border-gray-200 bg-white hover:border-amber-300 hover:bg-gray-50'
+            }`}
+          >
+            <div className="flex items-start gap-3">
+              <div className={`flex-shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                selectedOption === -1
+                  ? 'border-amber-500 bg-amber-500'
+                  : 'border-gray-300'
+              }`}>
+                {selectedOption === -1 && (
+                  <div className="w-2 h-2 bg-white rounded-full" />
+                )}
+              </div>
+              <span className={`flex-1 text-base ${
+                selectedOption === -1 ? 'text-gray-900 font-medium' : 'text-gray-700'
+              }`}>
+                我不确定 (Uncertain)
+              </span>
+            </div>
+          </button>
         </div>
 
         {/* Navigation */}

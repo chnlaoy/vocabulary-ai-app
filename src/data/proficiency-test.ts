@@ -186,7 +186,7 @@ export function calculateProficiencyLevel(answers: Record<string, number>): Test
     } else {
       wrongAnswers.push({
         question: q.question,
-        userAnswer: q.options[userAnswer] || 'No answer',
+        userAnswer: userAnswer === -1 ? '不确定' : (q.options[userAnswer] || '未回答'),
         correctAnswer: q.options[q.correctIndex]
       });
     }
