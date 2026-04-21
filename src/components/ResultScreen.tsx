@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { FeatureModal } from './FeatureModal';
 import { WordFamilyTree } from './WordFamilyTree';
 import { PracticeQuiz } from './PracticeQuiz';
+import { RootDailyLearner } from './RootDailyLearner';
 
 export function ResultScreen({
   result,
@@ -325,6 +326,19 @@ export function ResultScreen({
               返回结果页面
             </button>
             <PracticeQuiz weakAreas={result.weakAreas} onComplete={() => setActiveFeatureComponent(null)} />
+          </div>
+        )}
+
+        {activeFeatureComponent === 'root-daily-learner' && (
+          <div className="mb-6">
+            <button
+              onClick={() => setActiveFeatureComponent(null)}
+              className="mb-4 text-sm text-gray-600 hover:text-gray-900 flex items-center gap-1"
+            >
+              <ArrowRight className="w-4 h-4 rotate-180" />
+              返回结果页面
+            </button>
+            <RootDailyLearner onComplete={() => setActiveFeatureComponent(null)} />
           </div>
         )}
 

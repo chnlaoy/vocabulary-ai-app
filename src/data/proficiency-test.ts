@@ -403,6 +403,14 @@ export const featureModules: FeatureModule[] = [
     targetWeakAreas: ['vocabulary', 'grammar', 'reading']
   },
   {
+    id: 'root-daily-learner',
+    name: '每日词根学习',
+    icon: 'BookOpen',
+    description: '自选每日学习词根数量,按使用频率排序,提供自然语音讲解和日常例句',
+    enabledFor: ['beginner', 'intermediate', 'advanced'],
+    targetWeakAreas: ['vocabulary']
+  },
+  {
     id: 'review-schedule',
     name: '智能复习计划',
     icon: 'Calendar',

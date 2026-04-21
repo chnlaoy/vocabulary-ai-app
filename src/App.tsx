@@ -22,9 +22,10 @@ export default function App() {
   const [testResult, setTestResult] = useState<TestResult | null>(null);
   const [wordsToLearn, setWordsToLearn] = useState<typeof wordCards>([]);
 
-  const [mode, setMode] = useState<Mode>('text');
+    const [mode, setMode] = useState<Mode>('text');
   const [isTutorMode, setIsTutorMode] = useState(false);
   const [autoPlay, setAutoPlay] = useState(false);
+  const [dailyLimit, setDailyLimit] = useState(5);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [search, setSearch] = useState('');
   const [showSidebar, setShowSidebar] = useState(false);
@@ -471,7 +472,7 @@ export default function App() {
                 >
                   <SkipForward className="w-5 h-5" />
                 </button>
-              </div>
+
             </div>
           </div>
         </div>

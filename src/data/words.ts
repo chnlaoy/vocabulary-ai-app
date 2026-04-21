@@ -5,8 +5,14 @@ export interface WordExample {
   category?: 'daily' | 'media' | 'formal';
 }
 
-export interface RelatedWord {
-  word: string;
+export interface RootInfo {
+  form: string;
+  meaning: string;
+  origin: string;
+}
+
+export interface AffixInfo {
+  form: string;
   meaning: string;
 }
 
@@ -16,437 +22,190 @@ export interface EtymologyStep {
   meaning: string;
 }
 
-export type WordDifficulty = 'beginner' | 'intermediate' | 'advanced';
-
 export interface WordCard {
   id: string;
   word: string;
-  phonetic: string;
+  frequency: number;
   partOfSpeech: string;
   definition: string;
-  difficulty: WordDifficulty;
-  root: {
-    form: string;
-    meaning: string;
-    origin: string;
-  };
-  prefix?: {
-    form: string;
-    meaning: string;
-  };
-  suffix?: {
-    form: string;
-    meaning: string;
-  };
-  etymology: EtymologyStep[];
+  prefix?: AffixInfo;
+  root: RootInfo;
+  suffix?: AffixInfo;
   memoryTip: string;
+  etymology: EtymologyStep[];
   examples: WordExample[];
-  relatedWords: RelatedWord[];
+  difficulty: 'easy' | 'medium' | 'hard';
   tags: string[];
 }
 
 export const wordCards: WordCard[] = [
   {
-    id: "1",
-    word: "transport",
-    phonetic: "/trænsˈpɔːrt/",
-    partOfSpeech: "verb / noun",
-    definition: "运输；将...从一地转移到另一地",
-    difficulty: "beginner",
-    root: {
-      form: "port",
-      meaning: "携带，运送",
-      origin: "拉丁语 portare"
-    },
-    prefix: {
-      form: "trans-",
-      meaning: "穿越，跨越"
-    },
+    id: 'w1',
+    word: 'transport',
+    frequency: 95,
+    partOfSpeech: 'verb/noun',
+    definition: ' transporting goods or people from one place to another',
+    prefix: { form: 'trans-', meaning: 'across, beyond' },
+    root: { form: 'port', meaning: 'carry', origin: 'Latin' },
+    memoryTip: 'Think of a "portable" speaker you "carry" across the room.',
     etymology: [
-      { period: "拉丁语", form: "transportare", meaning: "运送过去" },
-      { period: "古法语", form: "transporter", meaning: "运输，传送" },
-      { period: "现代英语", form: "transport", meaning: "运输（动词/名词）" }
+      { period: 'Latin', form: 'transportare', meaning: 'to carry across' },
+      { period: 'Middle English', form: 'transport', meaning: 'to move from one place to another' }
     ],
-    memoryTip: "trans（跨越）+ port（携带）= 跨越地方运送 → 运输",
     examples: [
-      {
-        sentence: "The company transports goods across the country by rail.",
-        translation: "这家公司通过铁路在全国运输货物。",
-        context: "商业物流场景"
-      },
-      {
-        sentence: "Public transport in this city is very efficient.",
-        translation: "这座城市的公共交通非常高效。",
-        context: "日常出行话题"
-      },
-      {
-        sentence: "Reading this novel transported me to medieval England.",
-        translation: "读这本小说把我带入了中世纪的英格兰。",
-        context: "文学欣赏，引申为'精神上的穿越'"
-      }
+      { sentence: 'I usually take public transport to get to the city center.', translation: '我通常乘坐公共交通工具去市中心。', context: '通勤日常', category: 'daily' },
+      { sentence: 'The logistics company handles the transport of fragile goods.', translation: '这家物流公司负责易碎货物的运输。', context: '商业对话', category: 'formal' },
+      { sentence: 'In the movie Interstellar, they transport humans to a new planet.', translation: '在电影《星际穿越》中，他们将人类运输到一颗新行星上。', context: '电影场景', category: 'media' }
     ],
-    relatedWords: [
-      { word: "export", meaning: "出口（ex- 向外 + port 运送）" },
-      { word: "import", meaning: "进口（im- 向内 + port 运送）" },
-      { word: "report", meaning: "汇报（re- 回 + port 携带 = 把消息带回来）" },
-      { word: "portable", meaning: "便携的（port + able 能...的）" },
-      { word: "porter", meaning: "搬运工（port + er 人）" }
-    ],
-    tags: ["商务", "交通", "日常"]
+    difficulty: 'easy',
+    tags: ['logistics', 'movement', 'basic']
   },
   {
-    id: "2",
-    word: "inspect",
-    phonetic: "/ɪnˈspekt/",
-    partOfSpeech: "verb",
-    definition: "检查，视察；仔细察看",
-    difficulty: "beginner",
-    root: {
-      form: "spect / spec",
-      meaning: "看，观察",
-      origin: "拉丁语 specere / spectare"
-    },
-    prefix: {
-      form: "in-",
-      meaning: "向内，深入"
-    },
-    suffix: {
-      form: "-t",
-      meaning: "动词化后缀"
-    },
+    id: 'w2',
+    word: 'inspect',
+    frequency: 80,
+    partOfSpeech: 'verb',
+    definition: 'looking at something closely to check its condition',
+    prefix: { form: 'in-', meaning: 'into, inside' },
+    root: { form: 'spect', meaning: 'look, see', origin: 'Latin' },
+    memoryTip: 'Think of a "spectator" who "looks" at a game.',
     etymology: [
-      { period: "拉丁语", form: "inspicere", meaning: "仔细查看，检查" },
-      { period: "拉丁语（动名词）", form: "inspectum", meaning: "被检查的事物" },
-      { period: "现代英语", form: "inspect", meaning: "检查，视察" }
+      { period: 'Latin', form: 'inspicere', meaning: 'to look into' },
+      { period: 'Middle English', form: 'inspect', meaning: 'to examine carefully' }
     ],
-    memoryTip: "in（向内深入）+ spect（看）= 深入地看 → 检查",
     examples: [
-      {
-        sentence: "The health inspector came to inspect the restaurant.",
-        translation: "卫生检查员来检查这家餐厅。",
-        context: "餐厅卫生检查"
-      },
-      {
-        sentence: "Please inspect the car carefully before buying it.",
-        translation: "买车前请仔细检查一下。",
-        context: "二手车购买建议"
-      },
-      {
-        sentence: "The general inspected the troops before the parade.",
-        translation: "将军在阅兵前检阅了部队。",
-        context: "军事/正式场合"
-      }
+      { sentence: 'Can you inspect the car for any scratches before we buy it?', translation: '在我们买之前，你能检查一下车上有没划痕吗？', context: '买车日常', category: 'daily' },
+      { sentence: 'The health officer came to inspect the restaurant kitchen.', translation: '卫生监督员来检查餐厅的厨房了。', context: '卫生检查', category: 'formal' },
+      { sentence: 'Sherlock Holmes carefully inspected the mud on the boots.', translation: '夏洛克·福尔摩斯仔细检查了靴子上的泥土。', context: '影视名作', category: 'media' }
     ],
-    relatedWords: [
-      { word: "respect", meaning: "尊重（re- 再次 + spect 看 = 再次审视 → 尊重）" },
-      { word: "expect", meaning: "期待（ex- 向外 + spect 看 = 向外张望）" },
-      { word: "spectacle", meaning: "奇观，眼镜（spect + acle 事物）" },
-      { word: "perspective", meaning: "视角（per 通过 + spect 看 + ive）" },
-      { word: "suspect", meaning: "怀疑（su=sub 在下 + spect 看 = 向下偷看）" }
-    ],
-    tags: ["职场", "正式", "视觉"]
+    difficulty: 'easy',
+    tags: ['examine', 'careful', 'basic']
   },
   {
-    id: "3",
-    word: "biography",
-    phonetic: "/baɪˈɒɡrəfi/",
-    partOfSpeech: "noun",
-    definition: "传记；他人撰写的某人的生平故事",
-    difficulty: "intermediate",
-    root: {
-      form: "graph / graphy",
-      meaning: "写，记录",
-      origin: "希腊语 graphein"
-    },
-    prefix: {
-      form: "bio-",
-      meaning: "生命，生物"
-    },
+    id: 'w3',
+    word: 'biography',
+    frequency: 60,
+    partOfSpeech: 'noun',
+    definition: 'the story of a person\'s life written by someone else',
+    prefix: { form: 'bio-', meaning: 'life' },
+    root: { form: 'graph', meaning: 'write, draw', origin: 'Greek' },
+    memoryTip: 'Bio (life) + Graph (write) = writing about a life.',
     etymology: [
-      { period: "希腊语", form: "bios + graphia", meaning: "生命 + 书写" },
-      { period: "现代拉丁语", form: "biographia", meaning: "传记写作" },
-      { period: "现代英语", form: "biography", meaning: "传记" }
+      { period: 'Greek', form: 'bios', meaning: 'life' },
+      { period: 'Greek', form: 'graphia', meaning: 'writing' }
     ],
-    memoryTip: "bio（生命）+ graphy（写作）= 关于生命的写作 → 传记",
     examples: [
-      {
-        sentence: "She wrote a fascinating biography of Einstein.",
-        translation: "她写了一部关于爱因斯坦的精彩传记。",
-        context: "文学写作"
-      },
-      {
-        sentence: "The actor's biography revealed many surprising facts.",
-        translation: "这位演员的传记揭露了许多令人惊讶的事实。",
-        context: "娱乐新闻"
-      },
-      {
-        sentence: "I prefer biographies over fiction—they're stranger than any novel.",
-        translation: "我比较喜欢传记而非小说——真实比任何小说都更离奇。",
-        context: "日常阅读偏好"
-      }
+      { sentence: 'I\'m reading a fascinating biography of Elon Musk.', translation: '我正在读一本关于埃隆·马斯克的精彩传记。', context: '阅读分享', category: 'daily' },
+      { sentence: 'The library has a complete biography of Winston Churchill.', translation: '图书馆里有温斯顿·丘吉尔的完整传记。', context: '图书馆查询', category: 'formal' },
+      { sentence: 'The movie is a cinematic biography of the legendary singer.', translation: '这部电影是关于这位传奇歌手的电影传记。', context: '电影评论', category: 'media' }
     ],
-    relatedWords: [
-      { word: "autobiography", meaning: "自传（auto- 自己 + biography）" },
-      { word: "biology", meaning: "生物学（bio 生命 + logy 学科）" },
-      { word: "geography", meaning: "地理学（geo 地球 + graphy 写作）" },
-      { word: "photograph", meaning: "照片（photo 光 + graph 写/记录）" },
-      { word: "autograph", meaning: "亲笔签名（auto 自己 + graph 写）" }
-    ],
-    tags: ["文学", "学术", "人文"]
+    difficulty: 'medium',
+    tags: ['life', 'writing', 'literature']
   },
   {
-    id: "4",
-    word: "telephone",
-    phonetic: "/ˈtelɪfəʊn/",
-    partOfSpeech: "noun / verb",
-    definition: "电话；用电话联系",
-    difficulty: "beginner",
-    root: {
-      form: "phone",
-      meaning: "声音，声波",
-      origin: "希腊语 phōnē"
-    },
-    prefix: {
-      form: "tele-",
-      meaning: "远距离，遥远"
-    },
+    id: 'w4',
+    word: 'telephone',
+    frequency: 90,
+    partOfSpeech: 'noun/verb',
+    definition: 'a system for transmitting voices over a distance',
+    prefix: { form: 'tele-', meaning: 'far, distant' },
+    root: { form: 'phone', meaning: 'sound, voice', origin: 'Greek' },
+    memoryTip: 'Telescope (far sight) + Phone (sound) = far sound.',
     etymology: [
-      { period: "希腊语", form: "tēle + phōnē", meaning: "远处 + 声音" },
-      { period: "19世纪", form: "telephone（贝尔命名）", meaning: "远程传声装置" },
-      { period: "现代英语", form: "telephone / phone", meaning: "电话" }
+      { period: 'Greek', form: 'tele', meaning: 'far' },
+      { period: 'Greek', form: 'phone', meaning: 'sound' }
     ],
-    memoryTip: "tele（远）+ phone（声音）= 远距离传声 → 电话",
     examples: [
-      {
-        sentence: "I'll telephone you when I arrive.",
-        translation: "我到了就给你打电话。",
-        context: "日常约定"
-      },
-      {
-        sentence: "The telephone revolutionized long-distance communication.",
-        translation: "电话彻底改变了长途通讯方式。",
-        context: "科技发展史"
-      },
-      {
-        sentence: "She spent hours on the telephone with her friend.",
-        translation: "她和朋友在电话上聊了好几个小时。",
-        context: "社交生活"
-      }
+      { sentence: 'I\'ll give you a telephone call as soon as I land.', translation: '我一落地就给你打个电话。', context: '旅行沟通', category: 'daily' },
+      { sentence: 'The telephone was a revolutionary invention in the 19th century.', translation: '电话是 19 世纪的一项革命性发明。', context: '历史知识', category: 'formal' },
+      { sentence: 'In old noir films, the telephone is often a key plot device.', translation: '在旧的黑色电影中，电话经常是关键的剧情道具。', context: '影视分析', category: 'media' }
     ],
-    relatedWords: [
-      { word: "television", meaning: "电视（tele 远 + vision 视觉）" },
-      { word: "microphone", meaning: "麦克风（micro 微小 + phone 声音）" },
-      { word: "saxophone", meaning: "萨克斯管（发明者 Sax + phone 声音）" },
-      { word: "phonetics", meaning: "语音学（phone + tics 学科）" },
-      { word: "symphony", meaning: "交响乐（sym 共同 + phone 声音）" }
-    ],
-    tags: ["科技", "通讯", "日常"]
+    difficulty: 'easy',
+    tags: ['communication', 'tech', 'basic']
   },
   {
-    id: "5",
-    word: "contradict",
-    phonetic: "/ˌkɒntrəˈdɪkt/",
-    partOfSpeech: "verb",
-    definition: "反驳；与...相矛盾",
-    difficulty: "intermediate",
-    root: {
-      form: "dict",
-      meaning: "说，宣告",
-      origin: "拉丁语 dicere / dictum"
-    },
-    prefix: {
-      form: "contra-",
-      meaning: "反对，相反"
-    },
+    id: 'w5',
+    word: 'contradict',
+    frequency: 70,
+    partOfSpeech: 'verb',
+    definition: 'to say the opposite of what someone else has said',
+    prefix: { form: 'contra-', meaning: 'against, opposite' },
+    root: { form: 'dict', meaning: 'say, speak', origin: 'Latin' },
+    memoryTip: 'Contra (opposite) + Dict (say) = say the opposite.',
     etymology: [
-      { period: "拉丁语", form: "contradicere", meaning: "反着说，反驳" },
-      { period: "古法语", form: "contredire", meaning: "否认，反对" },
-      { period: "现代英语", form: "contradict", meaning: "反驳，矛盾" }
+      { period: 'Latin', form: 'contradictio', meaning: 'speaking against' },
+      { period: 'Middle English', form: 'contradict', meaning: 'to deny or oppose' }
     ],
-    memoryTip: "contra（反对）+ dict（说）= 反着说 → 反驳",
     examples: [
-      {
-        sentence: "Don't contradict your teacher in front of the class.",
-        translation: "不要在全班面前反驳老师。",
-        context: "课堂礼仪"
-      },
-      {
-        sentence: "The new evidence contradicts the original theory.",
-        translation: "新证据与原有理论相矛盾。",
-        context: "科学研究"
-      },
-      {
-        sentence: "His actions contradict everything he claims to believe.",
-        translation: "他的行为与他声称的信念完全矛盾。",
-        context: "品格评价"
-      }
+      { sentence: 'I don\'t want to contradict you, but I think you\'re wrong.', translation: '我不想反驳你，但我觉得你错了。', context: '日常争论', category: 'daily' },
+      { sentence: 'The new evidence seems to contradict the witness\'s statement.', translation: '新证据似乎与证人的陈述相矛盾。', context: '法律场景', category: 'formal' },
+      { sentence: 'The plot twist in the end completely contradicts everything we saw.', translation: '结尾的剧情反转完全颠覆了我们之前看到的一切。', context: '剧评分享', category: 'media' }
     ],
-    relatedWords: [
-      { word: "predict", meaning: "预测（pre- 提前 + dict 说 = 提前说出）" },
-      { word: "dictate", meaning: "听写；独裁（dict + ate 使...）" },
-      { word: "dictionary", meaning: "词典（dict + ionary 工具书）" },
-      { word: "verdict", meaning: "裁决（ver 真实 + dict 说出）" },
-      { word: "diction", meaning: "措辞（dict + ion 名词化）" }
-    ],
-    tags: ["辩论", "学术", "日常"]
+    difficulty: 'medium',
+    tags: ['argument', 'logic', 'speaking']
   },
   {
-    id: "6",
-    word: "submarine",
-    phonetic: "/ˌsʌbməˈriːn/",
-    partOfSpeech: "noun / adjective",
-    definition: "潜水艇；水下的",
-    difficulty: "intermediate",
-    root: {
-      form: "mar / marine",
-      meaning: "海，海洋",
-      origin: "拉丁语 mare"
-    },
-    prefix: {
-      form: "sub-",
-      meaning: "在...之下，低于"
-    },
+    id: 'w6',
+    word: 'submarine',
+    frequency: 40,
+    partOfSpeech: 'noun/adj',
+    definition: 'a ship that can travel under water',
+    prefix: { form: 'sub-', meaning: 'under, below' },
+    root: { form: 'marine', meaning: 'sea', origin: 'Latin' },
+    memoryTip: 'Sub (under) + Marine (sea) = under the sea.',
     etymology: [
-      { period: "拉丁语", form: "sub + mare", meaning: "海面之下" },
-      { period: "现代拉丁语", form: "submarinus", meaning: "海底的，水下的" },
-      { period: "现代英语", form: "submarine", meaning: "潜水艇；水下的" }
+      { period: 'Latin', form: 'sub', meaning: 'under' },
+      { period: 'Latin', form: 'marinus', meaning: 'of the sea' }
     ],
-    memoryTip: "sub（在下面）+ marine（海洋）= 在海洋下面的 → 潜水艇",
     examples: [
-      {
-        sentence: "The submarine dived to avoid detection by enemy ships.",
-        translation: "潜水艇下潜以躲避敌舰的探测。",
-        context: "军事/战争场景"
-      },
-      {
-        sentence: "Scientists discovered new species in the submarine environment.",
-        translation: "科学家在海底环境中发现了新物种。",
-        context: "海洋科学研究"
-      },
-      {
-        sentence: "I ordered a submarine sandwich for lunch.",
-        translation: "我午餐点了一个潜艇三明治。",
-        context: "日常饮食，潜艇堡的形状像潜水艇"
-      }
+      { sentence: 'I\'ve always been curious about how a submarine works.', translation: '我一直很好奇潜水艇是如何工作的。', context: '兴趣讨论', category: 'daily' },
+      { sentence: 'The Navy deployed a nuclear-powered submarine to the region.', translation: '海军向该地区部署了一艘核潜艇。', context: '军事新闻', category: 'formal' },
+      { sentence: 'The submarine scenes in The Hunt for Red October are iconic.', translation: '《红色十月》中的潜艇场景非常经典。', context: '电影讨论', category: 'media' }
     ],
-    relatedWords: [
-      { word: "marine", meaning: "海洋的，海军（mare 海）" },
-      { word: "submarine", meaning: "submarine cable 海底电缆" },
-      { word: "mariner", meaning: "水手（marine + r）" },
-      { word: "maritime", meaning: "海事的（marine + time）" },
-      { word: "aquamarine", meaning: "海蓝宝石（aqua 水 + marine）" }
-    ],
-    tags: ["军事", "科学", "自然"]
+    difficulty: 'medium',
+    tags: ['ocean', 'navy', 'tech']
   },
   {
-    id: "7",
-    word: "philanthropy",
-    phonetic: "/fɪˈlænθrəpi/",
-    partOfSpeech: "noun",
-    definition: "慈善事业；对人类的博爱精神",
-    difficulty: "advanced",
-    root: {
-      form: "anthrop",
-      meaning: "人，人类",
-      origin: "希腊语 anthrōpos"
-    },
-    prefix: {
-      form: "philo- / phil-",
-      meaning: "喜爱，热爱"
-    },
-    suffix: {
-      form: "-y",
-      meaning: "名词后缀，表状态或行为"
-    },
+    id: 'w7',
+    word: 'philanthropy',
+    frequency: 50,
+    partOfSpeech: 'noun',
+    definition: 'the desire to promote the welfare of others, expressed by generous donations',
+    prefix: { form: 'phil-', meaning: 'love' },
+    root: { form: 'anthrop', meaning: 'human', origin: 'Greek' },
+    suffix: { form: '-y', meaning: 'state or quality' },
+    memoryTip: 'Phil (love) + Anthrop (human) = love of humans.',
     etymology: [
-      { period: "希腊语", form: "philanthrōpia", meaning: "对人类的爱" },
-      { period: "拉丁语", form: "philanthropia", meaning: "仁爱，博爱" },
-      { period: "现代英语", form: "philanthropy", meaning: "慈善，博爱" }
+      { period: 'Greek', form: 'philein', meaning: 'to love' },
+      { period: 'Greek', form: 'anthropos', meaning: 'human' }
     ],
-    memoryTip: "philo（爱）+ anthrop（人类）+ y（名词）= 爱人类的精神 → 慈善",
     examples: [
-      {
-        sentence: "Gates is known for his philanthropy in global health.",
-        translation: "盖茨以其在全球卫生领域的慈善事业而闻名。",
-        context: "商业人物报道"
-      },
-      {
-        sentence: "The foundation supports philanthropy in education.",
-        translation: "该基金会支持教育领域的慈善活动。",
-        context: "非营利组织"
-      },
-      {
-        sentence: "True philanthropy is giving without expecting recognition.",
-        translation: "真正的慈善是给予而不期望得到认可。",
-        context: "道德哲学讨论"
-      }
+      { sentence: 'Her philanthropy has helped thousands of children go to school.', translation: '她的慈善事业帮助了数千名儿童入学。', context: '社会话题', category: 'daily' },
+      { sentence: 'The foundation is known for its global philanthropy in healthcare.', translation: '该基金会以其在医疗保健领域的全球慈善事业而闻名。', context: '组织介绍', category: 'formal' },
+      { sentence: 'The documentary explores the complex motives behind his philanthropy.', translation: '这部纪录片探讨了他从事慈善事业背后复杂的动机。', context: '纪录片', category: 'media' }
     ],
-    relatedWords: [
-      { word: "philosopher", meaning: "哲学家（philo 爱 + soph 智慧 + er 人）" },
-      { word: "anthropology", meaning: "人类学（anthrop 人类 + logy 学科）" },
-      { word: "misanthropy", meaning: "厌世（mis 憎恨 + anthrop 人类）" },
-      { word: "Philadelphia", meaning: "费城（philos 爱 + adelphos 兄弟）" },
-      { word: "philharmonic", meaning: "爱乐的（philo 爱 + harmonic 和声）" }
-    ],
-    tags: ["人文", "社会", "商业"]
+    difficulty: 'hard',
+    tags: ['charity', 'society', 'humanity']
   },
   {
-    id: "8",
-    word: "psychology",
-    phonetic: "/saɪˈkɒlədʒi/",
-    partOfSpeech: "noun",
-    definition: "心理学；心理研究",
-    difficulty: "advanced",
-    root: {
-      form: "psych / psycho",
-      meaning: "心理，精神，灵魂",
-      origin: "希腊语 psychē"
-    },
-    suffix: {
-      form: "-logy",
-      meaning: "学科，研究领域"
-    },
+    id: 'w8',
+    word: 'psychology',
+    frequency: 85,
+    partOfSpeech: 'noun',
+    definition: 'the scientific study of the human mind and its functions',
+    prefix: { form: 'psych-', meaning: 'mind, soul' },
+    root: { form: 'logy', meaning: 'study of', origin: 'Greek' },
+    memoryTip: 'Psych (mind) + Logy (study) = study of the mind.',
     etymology: [
-      { period: "希腊语", form: "psychē + logos", meaning: "灵魂 + 研究" },
-      { period: "现代拉丁语", form: "psychologia", meaning: "关于精神的学问" },
-      { period: "现代英语", form: "psychology", meaning: "心理学" }
+      { period: 'Greek', form: 'psyche', meaning: 'soul/mind' },
+      { period: 'Greek', form: 'logos', meaning: 'word/study' }
     ],
-    memoryTip: "psycho（心理/灵魂）+ logy（学科）= 研究心理/灵魂的学问 → 心理学",
     examples: [
-      {
-        sentence: "She studied psychology to better understand human behavior.",
-        translation: "她学习心理学是为了更好地理解人类行为。",
-        context: "学术选择"
-      },
-      {
-        sentence: "The psychology of color affects how people feel in a room.",
-        translation: "色彩心理学影响人们在房间里的感受。",
-        context: "室内设计与营销"
-      },
-      {
-        sentence: "Understanding the psychology of fear can help overcome phobias.",
-        translation: "了解恐惧的心理学可以帮助克服恐惧症。",
-        context: "心理治疗"
-      }
+      { sentence: 'I\'m taking a psychology class to understand people better.', translation: '我选了一门心理学课，为了更好地了解人们。', context: '校园生活', category: 'daily' },
+      { sentence: 'Consumer psychology plays a huge role in modern marketing.', translation: '消费心理学在现代营销中起着巨大的作用。', context: '商业分析', category: 'formal' },
+      { sentence: 'The movie Inception is like a deep dive into the psychology of dreams.', translation: '电影《盗梦空间》就像是对梦境心理学的深度探讨。', context: '影评', category: 'media' }
     ],
-    relatedWords: [
-      { word: "psychiatry", meaning: "精神病学（psych + iatry 医疗）" },
-      { word: "psychic", meaning: "心灵感应的（psych + ic 形容词）" },
-      { word: "biology", meaning: "生物学（bio 生命 + logy）" },
-      { word: "sociology", meaning: "社会学（socio 社会 + logy）" },
-      { word: "psychopath", meaning: "精神病患者（psycho + path 病）" }
-    ],
-    tags: ["学术", "科学", "人文"]
+    difficulty: 'medium',
+    tags: ['mind', 'science', 'behavior']
   }
-];
-
-export const rootDatabase = [
-  { root: "port", meaning: "携带，运送", origin: "拉丁语", examples: ["transport", "export", "import", "portable"] },
-  { root: "spect/spec", meaning: "看，观察", origin: "拉丁语", examples: ["inspect", "respect", "expect", "spectacle"] },
-  { root: "graph/graphy", meaning: "写，记录", origin: "希腊语", examples: ["biography", "photograph", "geography"] },
-  { root: "phone", meaning: "声音", origin: "希腊语", examples: ["telephone", "microphone", "symphony"] },
-  { root: "dict", meaning: "说，宣告", origin: "拉丁语", examples: ["contradict", "predict", "dictate", "dictionary"] },
-  { root: "mar/marine", meaning: "海，海洋", origin: "拉丁语", examples: ["submarine", "marine", "maritime"] },
-  { root: "anthrop", meaning: "人，人类", origin: "希腊语", examples: ["philanthropy", "anthropology"] },
-  { root: "psych", meaning: "心理，灵魂", origin: "希腊语", examples: ["psychology", "psychiatry", "psychic"] },
 ];
